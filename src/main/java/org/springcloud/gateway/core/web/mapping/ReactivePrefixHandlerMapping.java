@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 ~ 2025 the original author or authors. <wanglsir@gmail.com, 983708408@qq.com>
+ * Copyright 2017 ~ 2025 the original author or authors. <springcloudgateway@gmail.com, >
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,16 +32,6 @@ import org.springframework.web.reactive.result.method.RequestMappingInfo;
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.util.pattern.PathPattern;
 
-/**
- * {@link ReactivePrefixHandlerMapping}
- * 
- * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
- * @version 2020-09-12
- * @sine v1.0.0
- * @see {@link de.codecentric.boot.admin.server.config.AdminServerWebConfiguration.ReactiveRestApiConfiguration}
- * @see {@link de.codecentric.boot.admin.server.config.AdminServerWebConfiguration.ServletRestApiConfirguation}
- * @see {@link org.springframework.web.servlet.DispatcherServlet#getHandler()}
- */
 public class ReactivePrefixHandlerMapping extends RequestMappingHandlerMapping {
 
     private final String mappingPrefix;
@@ -89,9 +79,6 @@ public class ReactivePrefixHandlerMapping extends RequestMappingHandlerMapping {
                 mapping.getCustomCondition());
     }
 
-    /**
-     * @see {@link de.codecentric.boot.admin.server.web.reactive.AdminControllerHandlerMapping#withNewPatterns(Set)}
-     */
     private List<PathPattern> withNewPatterns(Set<PathPattern> patterns) {
         return patterns.stream()
                 .map(pattern -> getPathPatternParser().parse(PathUtils.normalizePath(mappingPrefix.concat(pattern.toString()))))

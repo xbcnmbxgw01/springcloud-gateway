@@ -1,5 +1,5 @@
-# Copyright (c) 2017 ~ 2025, the original author springcloudgateway individual Inc,
-# All rights reserved. Contact us<springcloudgateway@163.com>
+# Copyright (c) 2017 ~ 2025, the original author James Gsoing individual Inc,
+# All rights reserved. Contact us <springcloudgateway@gmail.com, >
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,44 +12,30 @@
 #
 spring:
   application.name: gateway
-  profiles:
-    include: route
-    active: dev
-  banner:
-      location: classpath:META-INF/banner.txt
-  freemarker:
-    checkTemplateLocation: false
   main:
     allow-circular-references: true
     allow-bean-definition-overriding: true
-  ## see:https://reflectoring.io/spring-boot-tracing/
-  ## The entry of bind attrs to reactor context see:org.springframework.cloud.sleuth.instrument.reactor.ReactorSleuth#runMonoSupplierInScope()
+  profiles:
+    include: route
+    active: dev
+  freemarker:
+    checkTemplateLocation: false
   sleuth:
     enabled: true
-    ## see:org.springframework.cloud.sleuth.autoconfig.instrument.web.TraceWebFluxConfiguration
-    ## see:org.springframework.cloud.sleuth.autoconfig.instrument.web.SleuthWebProperties
     web:
-      ## [Note]: In order to use canary tracking instead of the original TraceWebFilter, that must be turned off.
-      ## see:org.springcloud.gateway.core.commons.trace.config.GrayTraceAutoConfiguration#canaryTraceWebFilter()
       enabled: false
       #skipPattern:
       #filterOrder:
       #ignoreAutoConfiguredSkipPatterns: false
-    ### see:org.springframework.cloud.sleuth.autoconfig.brave.SleuthProperties
     #traceId128: false
     #supportsJoin: false
-    ### see:org.springframework.cloud.sleuth.autoconfig.SleuthOpentracingProperties
     #opentracing:
     #  enabled: true
-    ### see:org.springframework.cloud.sleuth.autoconfig.brave.ConditionalOnBraveEnabled
-    ### see:org.springframework.cloud.sleuth.autoconfig.SleuthTracerProperties
     #tracer:
     #  mode: AUTO
-    ### see:org.springframework.cloud.sleuth.autoconfig.brave.SamplerProperties
     #sampler:
     #  probability: 
     #  rate: 10
-    ### see:org.springframework.cloud.sleuth.autoconfig.brave.instrument.grpc.BraveGrpcAutoConfiguration
     #grpc:
     #  enabled: true
     #zipkin:
@@ -134,32 +120,16 @@ spring:
         jaeger:
           endpoint: http://localhost:14250
           timeout: 10000
-  ## Solve the problem of 'DataBufferLimitException: Exceeded limit on max bytes to buffer : 262144',
-  ## but the lower version is invalid.
-  ## see:https://github.com/spring-cloud/spring-cloud-gateway/issues/1924
-  ## see:https://github.com/spring-cloud/spring-cloud-gateway/issues/1793
-  ## see:https://github.com/spring-cloud/spring-cloud-gateway/issues/1596
   #codec.max-in-memory-size: 102400000
   cloud:
     ## see:https://github.com/spring-cloud/spring-cloud-gateway/issues/1370
     circuitbreaker:
-      ## see:https://cloud.spring.io/spring-cloud-circuitbreaker/reference/html/spring-cloud-circuitbreaker.html
-      ## see:org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JAutoConfiguration
       resilience4j:
         enabled: true
     loadbalancer:
       use404: false ## Default by false
-    ## see:org.springframework.cloud.gateway.config.GatewayAutoConfiguration
-    ## see:org.springframework.cloud.gateway.config.GatewayProperties
-    ## see:org.springframework.cloud.gateway.handler.FilteringWebHandler#handle()
-    ## see:https://cloud.spring.io/spring-cloud-static/spring-cloud-gateway/2.0.0.RELEASE/single/spring-cloud-gateway.html#_requestratelimiter_gatewayfilter_factory
-    ## see:https://github.com/eugenp/tutorials/blob/master/spring-cloud/spring-cloud-gateway/src/main/resources/application-webfilters.yml
-    ## see:https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/appendix.html
     gateway:
       x-forwarded: ## see:org.springframework.cloud.gateway.filter.headers.XForwardedHeadersFilter
-        ## [Note]: Note: If the fallbackURI must not be set to '/', otherwise when the circuit breaker is enabled, since the addition of the
-        ## 'x-forward' and 'forwarded' headers is enabled by default, when all backend service instances are unreachable, a large number of 
-        ## repetitions will be added header, the client eventually responds with a 413 error.
         enabled: true ## Default by true
         forEnabled: true ## Add for X-Forwarded-For, Default by true
         hostEnabled: true ## true ## Add for X-Forwarded-Host, Default by true
@@ -171,7 +141,6 @@ spring:
         portAppend: true ## Add for X-Forwarded-Port list, Default by true
         protoAppend: true ## Add for X-Forwarded-Proto list, Default by true
         prefixAppend: true ## Add for X-Forwarded-Prefix list, Default by true
-      ## see:org.springframework.cloud.gateway.config.GlobalCorsProperties
       #globalcors:
       #  cors-configurations: ## Default no set.
       fail-on-route-definition-error: true ## Default by true
@@ -186,9 +155,6 @@ spring:
           permitted-cross-domain-policies: none ## Default by 'none'
           frame-options: DENY ## Default by 'DENY'
           download-options: noopen ## Default by 'noopen'
-        ## !!! [Deprecated]: use 'spring.iam.gateway.ratelimit' !!!
-        ## The default request ratelimiter configuragion.
-        ## see:org.springframework.cloud.gateway.filter.factory.RequestRateLimiterGatewayFilterFactory#apply()
         ##request-rate-limiter:
         ##  denyEmptyKey: true
         ##  emptyKeyStatusCode: UNPROCESSABLE_ENTITY
@@ -239,9 +205,6 @@ spring:
           #key-store-provider:
           #trusted-x509-certificates:
           #use-insecure-trust-manager: true ## Default by false
-      ## see:org.springframework.cloud.gateway.config.GatewayMetricsAutoConfiguration
-      ## see:org.springframework.boot.actuate.metrics.web.reactive.server.MetricsWebFilter
-      ## see:org.springframework.cloud.gateway.filter.GatewayMetricsFilter
       metrics:
         enabled: true ## Default no-set.
         prefix: iam_gateway ## Default by 'spring.cloud.gateway'
@@ -252,19 +215,8 @@ spring:
       actuator:
         verbose:
           enabled: true ## Default by false
-
-  ## ######################
-  ## Infra configuration.
-  ## ######################
   infra:
-    ## Note: That disable generic logging for the infrastructure and enable special logging for the gateway.
-    ## currently, the two implementations are almost identical, but in the future the gateway's logging
-    ## may add special functionality.
     core.logging.enabled: false
-
-  ## ######################
-  ## SpringCloud gateway configuration.
-  ## ######################
   iam:
     gateway:
       server:
@@ -721,13 +673,13 @@ spring:
         registerRouteServicesInitialSeconds: 1 ## Default by 1s
         ## The interval at which the instance list is periodically pulled update register from the discovery server.
         registerRouteServicesDelaySeconds: 60 ## Default by 60s
-        defaultChoose: ## see:org.springcloud.gateway.core.commonsloadbalance.CanaryLoadBalancerFilterFactory#applyGlobalToConfig()
+        defaultChoose: ## see:com.wl4g.iam.gateway.loadbalance.CanaryLoadBalancerFilterFactory#applyGlobalToConfig()
           ## When no canary condition is matched, whether all instances of the service are candidates.
           fallback-all-to-candidates: true
           load-balancer-algorithm: LC ## Optional(R|RR|WR|WRR|DH|SH|LC|LT|WLC|WLT)
           max-choose-tries: 10 ## Default by 10
           null-ping-to-reachable: true ## Default by true
-        defaultProbe: ## see:org.springcloud.gateway.core.commonsloadbalance.CanaryLoadBalancerFilterFactory#applyGlobalToConfig()
+        defaultProbe: ## see:com.wl4g.iam.gateway.loadbalance.CanaryLoadBalancerFilterFactory#applyGlobalToConfig()
           debug: false ## Default by false
           initialSeconds: 3 ## Default by 3s
           delaySeconds: 10 ## Default by 10s
@@ -747,7 +699,7 @@ spring:
       client:
         provider:
           keycloak:
-            issuer-uri: https://scg.com/realms/master
+            issuer-uri: https://iam.wl4g.com/realms/master
         registration:
           keycloak:
             client-id: portal
@@ -782,7 +734,7 @@ management:
 ## Logging configuration.
 ## ######################
 ## see:https://docs.spring.io/spring-boot/docs/2.6.7/reference/htmlsingle/#features.logging.custom-log-configuration
-## see:org.springcloud.gateway.core.logging.custom.logback.CustomLogbackConfigurer
+## see:com.wl4g.infra.core.logging.custom.logback.CustomLogbackConfigurer
 logging:
   register-shutdown-hook: false
   charset.file: UTF-8
@@ -792,7 +744,7 @@ logging:
     config: "org.springframework.boot.context.config"
     tomcat: "org.apache.catalina,org.apache.coyote,org.apache.tomcat"
   file: ## see:org.springframework.boot.logging.LogFile#toString
-    name: /tmp/${spring.application.name}.log
+    name: /mnt/disk1/log/${spring.application.name}/${spring.application.name}.log
   pattern:
     console: '%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} [%clr(${spring.application.name})] [%clr(%-12.12X{principal})] [%clr(%-32.32X{traceId})] [%clr(%-8.8X{spanId})] %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx'
     file: '%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } [${spring.application.name}] [%-12.12X{principal}] [%-32.32X{traceId}] [%-8.8X{spanId}] --- [%t] %-40.40logger{39} : %m%n%wEx'
@@ -821,7 +773,7 @@ logging:
       apache: INFO
     feign: DEBUG
     com:
-      springcloud.gateway.iaxcnm.gateway: INFO
+      wl4g.iam.gateway: INFO
 
 ## ######################
 ## Server configuration.
@@ -833,13 +785,36 @@ server: ## see:org.springframework.boot.autoconfigure.web.ServerProperties
     enabled: true
   http2:
     enabled: ${server.ssl.enabled} ## Default by false
+  #netty:
+  #  connection-timeout: 
+  ## see:https://github.com/netty/netty/issues/832
+  ## see:https://docs.oracle.com/javase/7/docs/technotes/guides/security/jsse/ReadDebug.html
+  ## see:https://docs.spring.io/spring-boot/docs/current/reference/html/howto.html#howto-configure-ssl
+  ## see:https://github.com/spring-projects/spring-boot/blob/v2.6.6/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/web/server/Ssl.java
+  ## see:org.springframework.boot.web.embedded.netty.SslServerCustomizer#apply()
+  ## see:io.netty.handler.ssl.SslContext#defaultProvider()
+  ## see:io.netty.handler.ssl.SslHandler
+  ## Example: curl -v --cacert ca.pem --cert client1.pem --key client1-key.pem 'https://localhost:18085/v2/hello?appId=oi554a94bc416e4edd9ff963ed0e9e25e6c10545&nonce=vV5Y0Sf2DCNPnjCB&timestamp=1649477512798&signature=66aeaa14cb229d9f9b54cd71e59f8df4bbd511c039977b9149a25db7ca848065&response_type=json'
   ssl:
     enabled: false ## Default by false
     protocol: TLS ## Default by 'TLS'
     client-auth: NEED ## Default no set. Options(NONE|WANT|NEED)
+    ## see:https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/sun/security/ssl/ProtocolVersion.java
+    ## issue:https://bugs.openjdk.java.net/browse/JDK-8221218
     enabled-protocols: ['TLSv1', 'TLSv1.1', 'TLSv1.2', 'TLSv1.3'] ## Default no-set. Options(SSLv3|TLSv1|TLSv1.1|TLSv1.2|TLSv1.3)
+    ## see:https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/sun/security/ssl/CipherSuite.java
+    ## see:https://github.com/openjdk/jdk/blob/jdk8-b120/jdk/src/share/classes/sun/security/ssl/CipherSuite.java
+    ## see:io.netty.handler.ssl.OpenSslKeyMaterialManager#KEY_TYPES
+    ## issue:https://www.cnblogs.com/wade-luffy/p/6019743.html
+    #ciphers:
+    #  - TLS_DHE_RSA_WITH_AES_128_CBC_SHA256
+    #  - TLS_DHE_DSS_WITH_AES_128_CBC_SHA256
+    #  - TLS_RSA_WITH_AES_128_CBC_SHA256
+    #  - TLS_DHE_RSA_WITH_AES_128_CBC_SHA
+    #  - TLS_DHE_DSS_WITH_AES_128_CBC_SHA
+    #  - TLS_RSA_WITH_AES_128_CBC_SHA
     key-password: ${server.ssl.key-store-password}
-    key-store: classpath:cert.d/springcloud.gateway.io.p12
+    key-store: classpath:cert.d/wl4g.io.p12
     key-store-password: '123456'
     key-store-type: PKCS12 ## Default no-set by JKS. Options(JKS|PKCS12|DER|CER|..)
     #key-store-provider:

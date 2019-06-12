@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2017 ~ 2025 the original author or authors.
- * <Wanglsir@gmail.com, 983708408@qq.com> Technology CO.LTD.
+ * <springcloudgateway@gmail.com, > Technology CO.LTD.
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,7 +77,7 @@ import reactor.core.publisher.Mono;
  * {@link RequestMappingHandlerMapping}) </br>
  * </br>
  * 
- * @author Wangl.sir &lt;wanglsir@gmail.com, 983708408@qq.com&gt;
+ * @author James Gsoing &lt;springcloudgateway@gmail.com, &gt;
  * @version v1.0 2020-12-18
  * @sine v1.0
  * @see

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 ~ 2025 the original author or authors. <wanglsir@gmail.com, 983708408@qq.com>
+ * Copyright 2017 ~ 2025 the original author or authors. <springcloudgateway@gmail.com, >
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.springcloud.gateway.core.lang.ClassUtils2;
 /**
  * Abstract prefix request handler mapping auto configuration support.
  * 
- * @author wangl.sir
+ * @author James Gsoing
  * @version v1.0 2019年1月10日
  * @since
  * @see {@link de.codecentric.boot.admin.server.config.AdminServerWebConfiguration.ReactiveRestApiConfiguration}
